@@ -10,8 +10,8 @@ class PassotpServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/passotp.php', 'passotp');
 
-        $this->app->singleton(PassotpService::class, function () {
-            return new PassotpService();
+        $this->app->singleton(WhatsappPassotpService::class, function () {
+            return new WhatsappPassotpService();
         });
     }
 

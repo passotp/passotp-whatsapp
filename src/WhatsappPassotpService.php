@@ -1,27 +1,29 @@
 <?php
 
 namespace Momenshalaby\PassotpWhatsapp;
+
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class PassotpService
+class WhatsappPassotpService
 {
-    protected $apiUrl = 'https://fire.passotp.com';
+    protected $apiUrl;
     protected $instanceId;
     protected $accessToken;
 
     public function __construct()
     {
+        $this->apiUrl = config('passotp.api_url');
         $this->instanceId = config('passotp.instance_id');
         $this->accessToken = config('passotp.access_token');
     }
 
-    public function sendOtp(string $phone, string $otp): bool
+    public function sendOtp(string $to, string $message): bool
     {
-        $message = "Your OTP is: {$otp}";
+
 
         $payload = [
-            'phone' => $phone,
+            'phone' => $to,
             'type' => 'text',
             'message' => $message,
             'instance_id' => $this->instanceId,
@@ -29,13 +31,14 @@ class PassotpService
         ];
 
         $response = Http::post($this->apiUrl, $payload);
+        $responseData = $response->json();
 
-        if (!$response->successful()) {
-            Log::error("Passotp failed to send OTP: " . $response->body());
+        if (!isset($responseData['status']) || $responseData['status'] !== 'success') {
+            Log::error("Failed to send message to {$to}. Response: " . json_encode($responseData));
             return false;
         }
 
-        Log::info("Passotp OTP sent successfully to {$phone}");
+        Log::info("Successfully sent message {$message} to WhatsApp number: {$to}");
         return true;
     }
 }
