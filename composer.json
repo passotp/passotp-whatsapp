@@ -1,0 +1,25 @@
+{
+    "name": "momenshalaby/passotp-whatsapp",
+    "description": "Send WhatsApp OTP via Passotp",
+    "autoload": {
+        "psr-4": {
+            "Momenshalaby\\PassotpWhatsapp\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Momenshalaby\\PassotpWhatsapp\\PassotpServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "MomenShalaby",
+            "email": "momen.ahmed_2010@yahoo.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^8.0|^9.0|^10.0"
+    }
+}
