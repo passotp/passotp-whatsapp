@@ -20,17 +20,16 @@ class WhatsappPassotpService
 
     public function sendOtp(string $to, string $message): bool
     {
-
-
         $payload = [
-            'phone' => $to,
+            'phone' => '2' . $to,
             'type' => 'text',
             'message' => $message,
             'instance_id' => $this->instanceId,
             'access_token' => $this->accessToken,
         ];
 
-        $response = Http::post($this->apiUrl, $payload);
+        $response = Http::timeout(10)->post($this->apiUrl, $payload);
+
         $responseData = $response->json();
 
         if (!isset($responseData['status']) || $responseData['status'] !== 'success') {
