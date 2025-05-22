@@ -1,6 +1,9 @@
 {
     "name": "momenshalaby/passotp-whatsapp",
     "description": "Send WhatsApp OTP via Passotp",
+    "type": "library",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Momenshalaby\\PassotpWhatsapp\\": "src/"
@@ -20,6 +23,8 @@
         }
     ],
     "require": {
+
+        "php": "^8.0",
         "illuminate/support": "^8.0|^9.0|^10.0"
     }
 }
