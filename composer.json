@@ -22,6 +22,8 @@
             "email": "momen.ahmed_2010@yahoo.com"
         }
     ],
+    "license": "MIT",
+
     "require": {
 
         "php": "^8.0",
