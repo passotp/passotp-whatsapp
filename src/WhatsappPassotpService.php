@@ -4,6 +4,7 @@ namespace Momenshalaby\PassotpWhatsapp;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 class WhatsappPassotpService
 {
@@ -28,16 +29,29 @@ class WhatsappPassotpService
             'access_token' => $this->accessToken,
         ];
 
-        $response = Http::timeout(10)->post($this->apiUrl, $payload);
+        try {
+            $response = Http::timeout(10)->post($this->apiUrl, $payload);
 
-        $responseData = $response->json();
+            // Throw an exception if the HTTP request failed
+            $response->throw();
 
-        if (!isset($responseData['status']) || $responseData['status'] !== 'success') {
-            Log::error("Failed to send message to {$to}. Response: " . json_encode($responseData));
-            return false;
+            $responseData = $response->json();
+
+            if (!isset($responseData['status']) || $responseData['status'] !== 'success') {
+                throw new Exception("API returned unsuccessful status");
+            }
+
+            Log::info("Successfully sent message {$message} to WhatsApp number: {$to}");
+            return true;
+
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            Log::error("HTTP Request failed for {$to}: " . $e->getMessage());
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::error("Connection failed for {$to}: " . $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error("Failed to send message to {$to}: " . $e->getMessage());
         }
 
-        Log::info("Successfully sent message {$message} to WhatsApp number: {$to}");
-        return true;
+        return false;
     }
 }
